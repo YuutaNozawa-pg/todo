@@ -27,3 +27,8 @@
     </tbody>
   </table>
 @endsection
+
+<script>
+window.onload = function() {
+};
+</script>
