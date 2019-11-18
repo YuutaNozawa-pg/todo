@@ -4,29 +4,38 @@
 
 
 @section('content')
-  <table style="margin: auto;">
+  <table class="table">
     <thead>
   　   <tr>
-        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 120px;" class="border border-dark rounded-top">
+        <th>
+          <h3></h3>
+        </th>
+        <th>
           <h3>ToDo</h3>
         </th>
-        <th>&nbsp;</th>
-        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 120px;" class="border border-dark rounded-top">
+        <th>
           <h3>Doing</h3>
         </th>
-        <th>&nbsp;</th>
-        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 100px;" class="border border-dark rounded-top">
+        <th>
           <h3>Done</h3>
         </th>
       </tr>
     </thead>
-    <tbody id="todo-list">
+    <tbody class="todo-list">
       <!-- foreachディレクティブを使ってDBから一覧情報を表示する -->
+      @for ($i = 0; $i < 15; $i++)
+        <tr>
+          <td>{{ $i + 1 }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      @endfor
     </tbody>
   </table>
 
   <!-- 1.モーダル表示のためのボタン -->
-   <button style="margin-top: 10px; float: right;" class="btn btn-primary" data-toggle="modal" data-target="#modal-example">
+   <button class="todo-write btn btn-outline-dark" data-toggle="modal" data-target="#modal-example">
        Todoを書く
    </button>
 
@@ -41,8 +50,8 @@
          </div>
 
          <div class="modal-footer">
-             <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-             <button type="button" class="todo-write btn btn-primary">保存</button>
+             <button type="button" class="btn btn-outline-dark" data-dismiss="modal">閉じる</button>
+             <button type="button" class="todo-write-save btn btn-outline-dark">保存</button>
          </div>
        </div>
      </div>
@@ -55,15 +64,10 @@ window.onload = function() {
 };
 
 function addTodo() {
-  $(".todo-write").on("click", function() {
+  $(".todo-write-save").on("click", function() {
     let todoMessage = $(".modal-body").find("textarea").val();
-    let todoMessageBody = `
-      <tr>
-        <td>` + todoMessage + `</td>
-      </tr>
-    `;
 
-    $("#todo-list").append(todoMessageBody);
+    //$(".todo").append(todoMessageBody);
   });
 }
 </script>
