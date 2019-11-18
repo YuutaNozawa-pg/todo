@@ -7,13 +7,15 @@
   <table style="margin: auto;">
     <thead>
   　   <tr>
-        <th class="border border-dark rounded-top">
+        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 120px;" class="border border-dark rounded-top">
           <h3>ToDo</h3>
         </th>
-        <th class="border border-dark rounded-top">
+        <th>&nbsp;</th>
+        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 120px;" class="border border-dark rounded-top">
           <h3>Doing</h3>
         </th>
-        <th class="border border-dark rounded-top">
+        <th>&nbsp;</th>
+        <th style="padding-top: 20px; padding-bottom: 20px; padding-right: 120px; padding-left: 100px;" class="border border-dark rounded-top">
           <h3>Done</h3>
         </th>
       </tr>
@@ -24,7 +26,7 @@
   </table>
 
   <!-- 1.モーダル表示のためのボタン -->
-   <button style="float: right;" class="btn btn-primary" data-toggle="modal" data-target="#modal-example">
+   <button style="margin-top: 10px; float: right;" class="btn btn-primary" data-toggle="modal" data-target="#modal-example">
        Todoを書く
    </button>
 
