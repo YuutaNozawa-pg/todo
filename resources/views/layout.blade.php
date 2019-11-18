@@ -10,6 +10,8 @@
     <!--Bootstrap.JSの読み込み-->
     <script type="text/javascript" src="{{ asset('/js/bootstrap.js') }}" defer></script>
 
+    <!--todo.cssの読み込み -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/todo.css') }}">
     <title>@yield('title')</title>
   </head>
   <body>

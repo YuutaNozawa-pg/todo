@@ -1,0 +1,26 @@
+
+thead:after {
+  content: "";
+  height: 25px;
+  display: block;
+}
+
+th {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 120px;
+  padding-left: 120px;
+}
+
+table {
+  text-align: center;
+}
+
+td {
+  border-right: 5px;
+}
+
+button.todo-write {
+  margin-top: 10px;
+  float: right;
+}
