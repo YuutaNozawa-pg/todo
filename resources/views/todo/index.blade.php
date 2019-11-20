@@ -72,15 +72,15 @@ window.onload = function() {
 //Todoを書く
 function addTodo() {
   $(".todo-write-save").on("click", function() {
-    let todoMessageTitle = $(".modal-body").find("textarea.title").val();
-    let todoMessageContent = $(".modal-body").find("textarea.content").val();
+    let title = $(".modal-body").find("textarea.title").val();
+    let content = $(".modal-body").find("textarea.content").val();
 
     //一覧のリストをforeachで回す
     $(".todo").each(function(i, v) {
       //一覧から空白が見つかり次第
       if ($(v).text() == "") {
         //tdの中にタイトルを突っ込んでいる
-        $(v).text(todoMessageTitle);
+        $(v).text(title);
         return false;
       }
     });
