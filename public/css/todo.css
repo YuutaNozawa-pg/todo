@@ -24,3 +24,7 @@ button.todo-write {
   margin-top: 10px;
   float: right;
 }
+
+textarea {
+  resize: none;
+}

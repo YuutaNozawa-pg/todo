@@ -8,25 +8,25 @@
     <thead>
   　   <tr>
         <th>
-          <h3></h3>
+          <h5></h5>
         </th>
         <th>
-          <h3>ToDo</h3>
+          <h5>ToDo</h5>
         </th>
         <th>
-          <h3>Doing</h3>
+          <h5>Doing</h5>
         </th>
         <th>
-          <h3>Done</h3>
+          <h5>Done</h5>
         </th>
       </tr>
     </thead>
-    <tbody class="todo-list">
+    <tbody class="todo-group">
       <!-- foreachディレクティブを使ってDBから一覧情報を表示する -->
       @for ($i = 0; $i < 15; $i++)
-        <tr>
-          <td>{{ $i + 1 }}</td>
-          <td></td>
+        <tr class="todo-list">
+          <td class="todo-number">{{ $i + 1 }}</td>
+          <td class="todo"></td>
           <td></td>
           <td></td>
         </tr>
@@ -43,15 +43,21 @@
    <div class="modal" id="modal-example" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
-         <div class="modal-body">
-             <p>今日のTodoを書く<br>
-               <textarea rows="6" cols="63"></textarea>
+         <div class="modal-header">
+           <div class="modal-title"><h5>今日のTodoを書く</h5></div>
+         </div>
+         <div class="modal-body form-group">
+             <p><p>タイトル</p>
+               <textarea class="title form-control" cols="63"></textarea>
+             </p>
+             <p><p>本文</p>
+               <textarea class="content form-control" rows="6" cols="63"></textarea>
              </p>
          </div>
 
          <div class="modal-footer">
              <button type="button" class="btn btn-outline-dark" data-dismiss="modal">閉じる</button>
-             <button type="button" class="todo-write-save btn btn-outline-dark">保存</button>
+             <button type="button" class="todo-write-save btn btn-outline-dark" data-dismiss="modal">保存</button>
          </div>
        </div>
      </div>
@@ -63,11 +69,21 @@ window.onload = function() {
   addTodo();
 };
 
+//Todoを書く
 function addTodo() {
   $(".todo-write-save").on("click", function() {
-    let todoMessage = $(".modal-body").find("textarea").val();
+    let todoMessageTitle = $(".modal-body").find("textarea.title").val();
+    let todoMessageContent = $(".modal-body").find("textarea.content").val();
 
-    //$(".todo").append(todoMessageBody);
+    //一覧のリストをforeachで回す
+    $(".todo").each(function(i, v) {
+      //一覧から空白が見つかり次第
+      if ($(v).text() == "") {
+        //tdの中にタイトルを突っ込んでいる
+        $(v).text(todoMessageTitle);
+        return false;
+      }
+    });
   });
 }
 </script>
