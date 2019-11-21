@@ -11,7 +11,7 @@
           <h5></h5>
         </th>
         <th>
-          <h5>ToDo</h5>
+          <h5>Todo</h5>
         </th>
         <th>
           <h5>Doing</h5>
@@ -23,24 +23,24 @@
     </thead>
     <tbody class="todo-group">
       <!-- foreachディレクティブを使ってDBから一覧情報を表示する -->
-      @for ($i = 0; $i < 15; $i++)
-        <tr class="todo-list">
-          <td class="todo-number">{{ $i + 1 }}</td>
-          <td class="todo"></td>
-          <td></td>
-          <td></td>
-        </tr>
-      @endfor
+      @foreach ($userTodos as $userTodo)
+      <tr class="todo-list">
+        <td class="todo-number">{{ $userTodo->id }}</td>
+        <td class="todo">{{ $userTodo->title }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      @endforeach
     </tbody>
   </table>
 
   <!-- 1.モーダル表示のためのボタン -->
-   <button class="todo-write btn btn-outline-dark" data-toggle="modal" data-target="#modal-example">
+   <button class="todo-write btn btn-outline-dark" data-toggle="modal" data-target="#modal-add-todo">
        Todoを書く
    </button>
 
    <!-- 2.モーダルの配置 -->
-   <div class="modal" id="modal-example" tabindex="-1">
+   <div class="modal" id="modal-add-todo" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
          <div class="modal-header">
@@ -66,6 +66,16 @@
 
 <script>
 window.onload = function() {
+
+
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  $("#modal-add-todo").draggable({ cursor: "move" });
+
   addTodo();
 };
 
@@ -75,14 +85,42 @@ function addTodo() {
     let title = $(".modal-body").find("textarea.title").val();
     let content = $(".modal-body").find("textarea.content").val();
 
-    //一覧のリストをforeachで回す
-    $(".todo").each(function(i, v) {
-      //一覧から空白が見つかり次第
-      if ($(v).text() == "") {
-        //tdの中にタイトルを突っ込んでいる
-        $(v).text(title);
-        return false;
-      }
+    const userTodo = {
+      "title" : title,
+      "content" : content
+    };
+
+    $.ajax({
+      url: "/todo",
+      type: "post",
+      dataType: "json",
+      data: userTodo,
+    }).done(function(data){
+      console.log("success");
+      let maxValue = 0;
+      $(".todo-number").each(function(i, v) {
+        const number = parseInt($(v).text());
+
+        if (maxValue < number) {
+          maxValue = number;
+        }
+      });
+
+      console.log(data);
+
+      maxValue++;
+
+      $(".todo-group").append(`
+          <tr class="todo-list">
+            <td class="todo-number">` + maxValue + `</td>
+            <td class="todo">` + title + `</td>
+            <td></td>
+            <td></td>
+          </tr>
+      `);
+
+    }).fail(function(){
+
     });
   });
 }
