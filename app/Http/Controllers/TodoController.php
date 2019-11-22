@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\UserTodo;
 use Illuminate\Http\Request;
 
+use Validator;
+
 class TodoController extends Controller
 {
   public function index()
@@ -22,11 +24,27 @@ class TodoController extends Controller
   {
     $userTodo = new UserTodo();
 
-    $title = $request['title'];
-    $content = $request['content'];
+    $messages = [
+      'title.required' => 'please fill in the :attribute',
+      'content.required' => 'please fill in the :attribute',
+    ];
 
-    $userTodo->addTitleAndContent($title, $content);
+    $validator = Validator::make($request->all(), [
+      'title' => 'required',
+      'content' => 'required',
+    ], $messages);
 
-    return response()->json(['status' => 200, 'message' => 'success']);
+    if (!$validator->fails()) {
+      $title = $request['title'];
+      $content = $request['content'];
+
+      $userTodo->addTitleAndContent($title, $content);
+
+      $userTodos = $userTodo->getAllData();
+
+      return response()->json($userTodos);
+    }
+
+    return response()->json([ "error" => $validator->errors() ]);
   }
 }

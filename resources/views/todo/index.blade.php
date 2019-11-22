@@ -67,13 +67,16 @@
 <script>
 window.onload = function() {
 
-
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
 
+  //todoをdoing→doneに移動させるのに必要
+  $(".todo-list").sortable();
+
+  //モーダル自体を動かすのに必要
   $("#modal-add-todo").draggable({ cursor: "move" });
 
   addTodo();
@@ -96,7 +99,6 @@ function addTodo() {
       dataType: "json",
       data: userTodo,
     }).done(function(data){
-      console.log("success");
       let maxValue = 0;
       $(".todo-number").each(function(i, v) {
         const number = parseInt($(v).text());
@@ -105,8 +107,6 @@ function addTodo() {
           maxValue = number;
         }
       });
-
-      console.log(data);
 
       maxValue++;
 
