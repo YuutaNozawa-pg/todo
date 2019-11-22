@@ -18,7 +18,7 @@ class TodoController extends Controller
 
   }
 
-  public function update(Request $request)
+  public function create(Request $request)
   {
     $userTodo = new UserTodo();
 
