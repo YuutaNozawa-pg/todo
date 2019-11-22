@@ -3,8 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class UserTodo extends Model {
+
+  protected $fillable = [
+    'title',
+    'content'
+  ];
 
   //全件取得
   public function getAllData() {
@@ -13,9 +19,11 @@ class UserTodo extends Model {
 
   //1件データを追加
   public function addTitleAndContent($title, $content) {
-    $this->insert([
-      'title' => $title,
-      'content' => $content
-    ]);
+    DB::transaction(function() use ($title, $content) {
+      $this->create([
+          'title' => $title,
+          'content' => $content
+        ]);
+    });
   }
 }
