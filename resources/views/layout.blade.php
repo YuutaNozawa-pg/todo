@@ -6,8 +6,12 @@
     <script type="text/javascript" src="{{ asset('/js/jquery-3.4.1.js') }}" defer></script>
     <!--Bootstrap.JSの読み込み-->
     <script type="text/javascript" src="{{ asset('/js/bootstrap.js') }}" defer></script>
-
+    <!--モーダルウィンドウ動かすのに使う -->
     <script type="text/javascript" src="{{ asset('/js/jquery-ui.js') }}" defer></script>
+
+    <script type="text/javascript" src="{{ asset('/js/jquery.validate.js') }}" defer></script>
+
+
     <!--BootstrapのCSS読み込み-->
     <link rel="stylesheet" type="text/css" href="{{ asset('/css/bootstrap.css') }}">
     <!--todo.cssの読み込み -->

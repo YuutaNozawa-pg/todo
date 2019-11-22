@@ -39,6 +39,9 @@
        Todoを書く
    </button>
 
+  <div class="validate-title"></div>
+  <div class="validate-content"></div>
+
    <!-- 2.モーダルの配置 -->
    <div class="modal" id="modal-add-todo" tabindex="-1">
      <div class="modal-dialog">
@@ -47,17 +50,15 @@
            <div class="modal-title"><h5>今日のTodoを書く</h5></div>
          </div>
          <div class="modal-body form-group">
-             <p><p>タイトル</p>
-               <textarea class="title form-control" cols="63"></textarea>
-             </p>
-             <p><p>本文</p>
-               <textarea class="content form-control" rows="6" cols="63"></textarea>
-             </p>
+             <p>タイトル</p>
+             <textarea name="title" class="title form-control" cols="63"></textarea>
+             <p>本文</p>
+             <textarea name="content" class="content form-control" rows="6" cols="63"></textarea>
          </div>
 
          <div class="modal-footer">
-             <button type="button" class="btn btn-outline-dark" data-dismiss="modal">閉じる</button>
-             <button type="button" class="todo-write-save btn btn-outline-dark" data-dismiss="modal">保存</button>
+             <button class="btn btn-outline-dark" data-dismiss="modal">閉じる</button>
+             <button class="todo-write-save btn btn-outline-dark" data-dismiss="modal">保存</button>
          </div>
        </div>
      </div>
@@ -80,6 +81,7 @@ window.onload = function() {
   $("#modal-add-todo").draggable({ cursor: "move" });
 
   addTodo();
+
 };
 
 //Todoを書く
@@ -99,6 +101,19 @@ function addTodo() {
       dataType: "json",
       data: userTodo,
     }).done(function(data){
+      console.log(data);
+      if ('error' in data) {
+        $('.validate-title').text("");
+        $('.validate-content').text("");
+        
+        $('.validate-title').text(data.error.title);
+        $('.validate-content').text(data.error.content);
+        return;
+      }
+
+      $('.validate-title').text("");
+      $('.validate-content').text("");
+
       let maxValue = 0;
       $(".todo-number").each(function(i, v) {
         const number = parseInt($(v).text());
@@ -120,7 +135,6 @@ function addTodo() {
       `);
 
     }).fail(function(){
-
     });
   });
 }
