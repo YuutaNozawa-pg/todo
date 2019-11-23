@@ -1,10 +1,4 @@
 
-thead:after {
-  content: "";
-  height: 25px;
-  display: block;
-}
-
 th {
   padding-top: 20px;
   padding-bottom: 20px;
