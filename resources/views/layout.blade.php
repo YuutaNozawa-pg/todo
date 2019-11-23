@@ -8,8 +8,8 @@
     <script type="text/javascript" src="{{ asset('/js/bootstrap.js') }}" defer></script>
     <!--モーダルウィンドウ動かすのに使う -->
     <script type="text/javascript" src="{{ asset('/js/jquery-ui.js') }}" defer></script>
-
-    <script type="text/javascript" src="{{ asset('/js/jquery.validate.js') }}" defer></script>
+    <!--Sortable.min.js -->
+    <script type="text/javascript" src="{{ asset('/js/Sortable.min.js') }}" defer></script>
 
 
     <!--BootstrapのCSS読み込み-->

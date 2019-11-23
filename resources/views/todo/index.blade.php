@@ -4,8 +4,8 @@
 
 
 @section('content')
-  <table class="table">
-    <thead>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
   　   <tr>
         <th>
           <h5></h5>
@@ -19,17 +19,40 @@
         <th>
           <h5>Done</h5>
         </th>
+        <th>
+          <h5>Update</h5>
+        </th>
+        <th>
+          <h5>Detail</h5>
+        </th>
+        <th>
+          <h5>Delete</h5>
+        </th>
       </tr>
     </thead>
     <tbody class="todo-group">
       <!-- foreachディレクティブを使ってDBから一覧情報を表示する -->
-      @foreach ($userTodos as $userTodo)
+      @foreach ($todoContents as $todoContent)
       <tr class="todo-list">
-        <td class="todo-number">{{ $userTodo->id }}</td>
-        <td class="todo">{{ $userTodo->title }}</td>
-        <td></td>
-        <td></td>
-      </tr>
+        <td class="todo-number">{{ $todoContent->sequance }}</td>
+        @if ($todoContent->state == 0)
+          <td class="todo">{{ $todoContent->title }}</td>
+        @else
+          <td class="todo"></td>
+        @endif
+        @if ($todoContent->state == 1)
+          <td class="todo-doing">{{ $todoContent->title }}</td>
+        @else
+          <td class="todo-doing"></td>
+        @endif
+        @if ($todoContent->state == 2)
+          <td class="todo-done">{{ $todoContent->title }}</td>
+        @else
+          <td class="todo-done"></td>
+        @endif
+        <td class="todo-update"><button class="btn btn-outline-success">Update</button></td>
+        <td class="todo-info"><button class="btn btn-outline-info">Details</button></td>
+        <td class="todo-delete"><button class="btn btn-outline-danger">Delete</button></td>
       @endforeach
     </tbody>
   </table>
@@ -43,7 +66,7 @@
   <div class="validate-content"></div>
 
    <!-- 2.モーダルの配置 -->
-   <div class="modal" id="modal-add-todo" tabindex="-1">
+   <div class="modal fade" id="modal-add-todo" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
          <div class="modal-header">
@@ -75,22 +98,111 @@ window.onload = function() {
   });
 
   //todoをdoing→doneに移動させるのに必要
-  $(".todo-list").sortable();
+  $(".todo-list").each(function(i, v){
+    new Sortable(v,{
+      animation: 200,
+      draggable: ".todo, .todo-done, .todo-doing"
+    });
+  });
 
   //モーダル自体を動かすのに必要
   $("#modal-add-todo").draggable({ cursor: "move" });
 
   addTodo();
 
+  updateTodo();
+
+  deleteTodo();
+
 };
+
+function detailTodo() {
+  $(".todo-list td.todo-detail > button").on("click", function() {
+  });
+}
+
+function updateTodo() {
+
+  $(".todo-list td.todo-update > button").on("click", function(){
+
+    let td = $(this).parent().siblings();
+
+    let states = {
+      1 : 0,
+      2 : 1,
+      3 : 2,
+    };
+
+    let state = 0;
+    for (var i = 1; i < 4; i++) {
+      if($(td[i]).text() != "") {
+        state = states[i]
+      }
+    }
+
+    let currentSequance = $(this).parent().siblings('.todo-number').text();
+
+
+    let updateTodo = {
+      "sequance": currentSequance,
+      "state": state,
+      "_method": "PUT"
+    };
+
+    $.ajax({
+      url: "/todo",
+      type: "post",
+      dataType: "json",
+      data: updateTodo,
+    }).done(function(data) {
+      console.log(data);
+    }).fail(function() {
+
+    });
+  });
+}
+
+//Deleteを押す
+function deleteTodo() {
+
+  $(".todo-list td.todo-delete > button").on("click", function() {
+    const deleteTodo = {
+      "sequance": Number($(this).parent().siblings(".todo-number").text()),
+      "_method": "DELETE"
+    };
+
+    let myTableRow = $(this).parent().parent();
+
+    $.ajax({
+      url: "/todo",
+      type: "post",
+      dataType: "json",
+      data: deleteTodo,
+    }).done(function(data) {
+      $(myTableRow).remove();
+    }).fail(function() {
+    });
+  });
+}
 
 //Todoを書く
 function addTodo() {
   $(".todo-write-save").on("click", function() {
     let title = $(".modal-body").find("textarea.title").val();
     let content = $(".modal-body").find("textarea.content").val();
+    let maxValue = 0;
+    $(".todo-number").each(function(i, v) {
+      const number = parseInt($(v).text());
 
-    const userTodo = {
+      if (maxValue < number) {
+        maxValue = number;
+      }
+    });
+
+    maxValue++;
+
+    const addTodo = {
+      "sequance" : maxValue,
       "title" : title,
       "content" : content
     };
@@ -99,13 +211,13 @@ function addTodo() {
       url: "/todo",
       type: "post",
       dataType: "json",
-      data: userTodo,
+      data: addTodo,
     }).done(function(data){
       console.log(data);
       if ('error' in data) {
         $('.validate-title').text("");
         $('.validate-content').text("");
-        
+
         $('.validate-title').text(data.error.title);
         $('.validate-content').text(data.error.content);
         return;
@@ -114,25 +226,27 @@ function addTodo() {
       $('.validate-title').text("");
       $('.validate-content').text("");
 
-      let maxValue = 0;
-      $(".todo-number").each(function(i, v) {
-        const number = parseInt($(v).text());
-
-        if (maxValue < number) {
-          maxValue = number;
-        }
-      });
-
-      maxValue++;
-
       $(".todo-group").append(`
           <tr class="todo-list">
             <td class="todo-number">` + maxValue + `</td>
             <td class="todo">` + title + `</td>
-            <td></td>
-            <td></td>
+            <td class="todo-doing"></td>
+            <td class="todo-done"></td>
+            <td class="todo-update"><button class="btn btn-outline-success">Update</button></td>
+            <td class="todo-info"><button class="btn btn-outline-info">Details</button></td>
+            <td class="todo-delete"><button class="btn btn-outline-danger">Delete</button></td>
           </tr>
       `);
+
+      //todoをdoing→doneに移動させるのに必要
+      $(".todo-list").each(function(i, v){
+        new Sortable(v,{
+          animation: 200,
+          draggable: ".todo, .todo-done, .todo-doing"
+        });
+      });
+
+      //todoをdoing→doneに移動させるのに必要
 
     }).fail(function(){
     });
