@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UserTodo;
+use App\TodoContent;
 use Illuminate\Http\Request;
 
 use Validator;
@@ -12,17 +12,17 @@ class TodoController extends Controller
   public function index()
   {
 
-    $userTodo = new UserTodo();
+    $todoContent= new TodoContent();
 
-    $userTodos = $userTodo->getAllData();
+    $todoContents = $todoContent->getAllData();
 
-    return view('todo.index', compact('userTodos'));
+    return view('todo.index', compact('todoContents'));
 
   }
 
   public function create(Request $request)
   {
-    $userTodo = new UserTodo();
+    $todoContent = new TodoContent();
 
     $messages = [
       'title.required' => 'please fill in the :attribute',
@@ -34,17 +34,39 @@ class TodoController extends Controller
       'content' => 'required',
     ], $messages);
 
-    if (!$validator->fails()) {
-      $title = $request['title'];
-      $content = $request['content'];
-
-      $userTodo->addTitleAndContent($title, $content);
-
-      $userTodos = $userTodo->getAllData();
-
-      return response()->json($userTodos);
+    if ($validator->fails()) {
+      return response()->json([ "error" => $validator->errors() ]);
     }
 
-    return response()->json([ "error" => $validator->errors() ]);
+    $sequance = $request['sequance'];
+    $title = $request['title'];
+    $content = $request['content'];
+
+    $todoContent->addTitleAndContent($sequance, $title, $content);
+
+    $todoContents = $todoContent->getAllData();
+
+    return response()->json($todoContents);
+  }
+
+  public function update(Request $request)
+  {
+    $todoContent = new TodoContent();
+
+    $sequance = $request['sequance'];
+    $state = $request['state'];
+
+    $todoContent->updateContent($sequance, $state);
+
+    return response()->json($request->all());
+  }
+
+  public function delete(Request $request)
+  {
+    $todoContent = new TodoContent();
+
+    $todoContent->deleteContent($request['sequance']);
+
+    return response()->json($request->all());
   }
 }
