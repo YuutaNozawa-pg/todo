@@ -19,3 +19,15 @@ Route::get('todo', 'TodoController@index');
 Route::post('todo', 'TodoController@create');
 Route::put('todo', 'TodoController@update');
 Route::delete('todo', 'TodoController@delete');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
