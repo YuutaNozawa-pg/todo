@@ -31,17 +31,23 @@ class TodoContent extends Model {
     });
   }
 
-  public function updateContent($sequance, $state) {
-    DB::transaction(function() use ($sequance, $state) {
-      $this->where('sequance', '=', $sequance)
-           ->update(['state' => $state]);
+  public function updateContent($sequance, $state, $title, $content) {
+    DB::transaction(function() use ($sequance, $state, $title, $content) {
+      foreach ($sequance as $key => $value) {
+        $this->where('sequance', $value)
+             ->update([
+               'state' => $state[$key],
+               'title' => $title[$key],
+               'content' => $content[$key]
+             ]);
+      }
     });
   }
 
   //ユーザーIDに紐づくデータを削除したい
   public function deleteContent($sequance) {
     DB::transaction(function() use ($sequance) {
-      $this->where('sequance', '=', $sequance)
+      $this->whereIn('sequance', $sequance)
            ->delete();
     });
   }

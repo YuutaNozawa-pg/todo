@@ -15,9 +15,16 @@ td {
   resize: none;
 }
 
-button.todo-write {
-  margin-top: 10px;
+.todo-write {
   float: right;
+}
+
+.validate-title {
+  color: red
+}
+
+.validate-content {
+  color: red
 }
 
 textarea {

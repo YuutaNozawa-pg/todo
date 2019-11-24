@@ -8,7 +8,7 @@
     <thead class="thead-dark">
   　   <tr>
         <th>
-          <h5></h5>
+          <h5>#</h5>
         </th>
         <th>
           <h5>Todo</h5>
@@ -19,76 +19,88 @@
         <th>
           <h5>Done</h5>
         </th>
-        <th>
-          <h5>Update</h5>
-        </th>
-        <th>
-          <h5>Detail</h5>
-        </th>
-        <th>
-          <h5>Delete</h5>
-        </th>
       </tr>
     </thead>
     <tbody class="todo-group">
       <!-- foreachディレクティブを使ってDBから一覧情報を表示する -->
       @foreach ($todoContents as $todoContent)
       <tr class="todo-list">
-        <td class="todo-number">{{ $todoContent->sequance }}</td>
+        <td><input class="todo-checkbox" type="checkbox" value="{{ $todoContent->sequance }}"></td>
         @if ($todoContent->state == 0)
-          <td class="todo">{{ $todoContent->title }}</td>
+          <td class="todo" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo">{{ $todoContent->title }}</td>
         @else
-          <td class="todo"></td>
+          <td class="todo" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo"></td>
         @endif
         @if ($todoContent->state == 1)
-          <td class="todo-doing">{{ $todoContent->title }}</td>
+          <td class="todo-doing" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo">{{ $todoContent->title }}</td>
         @else
-          <td class="todo-doing"></td>
+          <td class="todo-doing" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo"></td>
         @endif
         @if ($todoContent->state == 2)
-          <td class="todo-done">{{ $todoContent->title }}</td>
+          <td class="todo-done" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo">{{ $todoContent->title }}</td>
         @else
-          <td class="todo-done"></td>
+          <td class="todo-done" data-sequance="{{ $todoContent->sequance }}" data-title="{{ $todoContent->title }}" data-content="{{ $todoContent->content }}" data-toggle="modal" data-target="#modal-detail-todo"></td>
         @endif
-        <td class="todo-update"><button class="btn btn-outline-success">Update</button></td>
-        <td class="todo-info"><button class="btn btn-outline-info">Details</button></td>
-        <td class="todo-delete"><button class="btn btn-outline-danger">Delete</button></td>
+      </tr>
       @endforeach
     </tbody>
   </table>
 
   <!-- 1.モーダル表示のためのボタン -->
-   <button class="todo-write btn btn-outline-dark" data-toggle="modal" data-target="#modal-add-todo">
-       Todoを書く
-   </button>
+   <button class="todo-write btn btn-outline-dark" data-toggle="modal" data-target="#modal-add-todo">Add</button>
+   <button class="button-todo-update btn btn-outline-success">Update</button>
+   <button class="button-todo-delete btn btn-outline-danger">Delete</button>
 
-  <div class="validate-title"></div>
-  <div class="validate-content"></div>
+   <div class="validate-title"></div>
+   <div class="validate-content"></div>
 
    <!-- 2.モーダルの配置 -->
    <div class="modal fade" id="modal-add-todo" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
          <div class="modal-header">
-           <div class="modal-title"><h5>今日のTodoを書く</h5></div>
+           <div class="modal-title"><h5>Write</h5></div>
          </div>
          <div class="modal-body form-group">
-             <p>タイトル</p>
+             <p>Title</p>
              <textarea name="title" class="title form-control" cols="63"></textarea>
-             <p>本文</p>
+             <br></br>
+             <p>Content</p>
              <textarea name="content" class="content form-control" rows="6" cols="63"></textarea>
          </div>
 
          <div class="modal-footer">
-             <button class="btn btn-outline-dark" data-dismiss="modal">閉じる</button>
-             <button class="todo-write-save btn btn-outline-dark" data-dismiss="modal">保存</button>
+             <button class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+             <button class="todo-write-save btn btn-outline-dark" data-dismiss="modal">Save</button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <!-- 2.モーダルの配置 -->
+   <div class="modal fade" id="modal-detail-todo" tabindex="-1">
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header">
+           <div class="modal-title"><h5>Edit</h5></div><br/>
+         </div>
+         <div class="modal-body form-group">
+             <p>Title</p>
+             <textarea readonly name="update-title" class="title form-control" cols="63"></textarea>
+             <br></br>
+             <p>Content</p>
+             <textarea readonly name="update-content" class="content form-control" rows="6" cols="63"></textarea>
+         </div>
+
+         <div class="modal-footer">
+             <button class="table-update-save btn btn-outline-dark" data-dismiss="modal">Close</button>
          </div>
        </div>
      </div>
    </div>
 @endsection
 
-<script>
+<script type="text/javascript">
 window.onload = function() {
 
   $.ajaxSetup({
@@ -112,20 +124,39 @@ window.onload = function() {
 
   updateTodo();
 
+  detailTodo();
+
   deleteTodo();
 
 };
 
 function detailTodo() {
-  $(".todo-list td.todo-detail > button").on("click", function() {
+  $("[data-target]").on("click", function() {
+    $("[name=update-title]").text($(this).data("title"));
+    $("[name=update-content]").text($(this).data("content"));
+    console.log($(this).data("content"));
   });
 }
 
 function updateTodo() {
 
-  $(".todo-list td.todo-update > button").on("click", function(){
+  $(".button-todo-update").on("click", function(){
 
-    let td = $(this).parent().siblings();
+    let updateChecked = [];
+    let updateTableRow = [];
+    let updateStates = [];
+    let updateTitles = [];
+    let updateContents = [];
+    $(".todo-checkbox").each(function(){
+      if ($(this).prop("checked")) {
+        updateChecked.push($(this).val());
+        updateTableRow.push($(this).parent().parent());
+      }
+    });
+
+    if (updateChecked.length == 0 ) {
+      return;
+    }
 
     let states = {
       1 : 0,
@@ -134,18 +165,25 @@ function updateTodo() {
     };
 
     let state = 0;
-    for (var i = 1; i < 4; i++) {
-      if($(td[i]).text() != "") {
-        state = states[i]
+    for (var i = 0; i < updateTableRow.length; i++) {
+      for (var j = 1; j < 4; j++) {
+        var table = $(updateTableRow[i]).children()[j];
+        if ($(table).text() != "") {
+          updateStates.push(states[j]);
+          let title = $(updateTableRow[i].children()[j]).data("title");
+          let content = $(updateTableRow[i].children()[j]).data("content");
+
+          updateTitles.push(title);
+          updateContents.push(content);
+        }
       }
     }
 
-    let currentSequance = $(this).parent().siblings('.todo-number').text();
-
-
     let updateTodo = {
-      "sequance": currentSequance,
-      "state": state,
+      "sequance": updateChecked,
+      "state": updateStates,
+      "title": updateTitles,
+      "content": updateContents,
       "_method": "PUT"
     };
 
@@ -155,9 +193,8 @@ function updateTodo() {
       dataType: "json",
       data: updateTodo,
     }).done(function(data) {
-      console.log(data);
-    }).fail(function() {
-
+      alert("Updated");
+    }).fail(function(data) {
     });
   });
 }
@@ -165,21 +202,35 @@ function updateTodo() {
 //Deleteを押す
 function deleteTodo() {
 
-  $(".todo-list td.todo-delete > button").on("click", function() {
-    const deleteTodo = {
-      "sequance": Number($(this).parent().siblings(".todo-number").text()),
-      "_method": "DELETE"
-    };
+  $(".button-todo-delete").on("click", function() {
 
-    let myTableRow = $(this).parent().parent();
+    let deleteChecked = [];
+    let deleteTableRow = [];
+    $(".todo-checkbox").each(function(){
+      if ($(this).prop("checked")) {
+        deleteChecked.push($(this).val());
+        deleteTableRow.push($(this).parent().parent());
+      }
+    });
+
+    if (deleteChecked.length == 0) {
+      return;
+    }
 
     $.ajax({
       url: "/todo",
       type: "post",
       dataType: "json",
-      data: deleteTodo,
+      data: {
+        "sequance": deleteChecked,
+        "_method": "DELETE",
+      },
     }).done(function(data) {
-      $(myTableRow).remove();
+      for (var i = 0; i < deleteTableRow.length; i++) {
+        deleteTableRow[i].remove();
+      }
+
+      alert("Deleted");
     }).fail(function() {
     });
   });
@@ -191,8 +242,8 @@ function addTodo() {
     let title = $(".modal-body").find("textarea.title").val();
     let content = $(".modal-body").find("textarea.content").val();
     let maxValue = 0;
-    $(".todo-number").each(function(i, v) {
-      const number = parseInt($(v).text());
+    $(".todo-checkbox").each(function(i, v) {
+      const number = parseInt($(v).val());
 
       if (maxValue < number) {
         maxValue = number;
@@ -213,7 +264,6 @@ function addTodo() {
       dataType: "json",
       data: addTodo,
     }).done(function(data){
-      console.log(data);
       if ('error' in data) {
         $('.validate-title').text("");
         $('.validate-content').text("");
@@ -228,13 +278,10 @@ function addTodo() {
 
       $(".todo-group").append(`
           <tr class="todo-list">
-            <td class="todo-number">` + maxValue + `</td>
+            <td><input class="todo-checkbox" type="checkbox" value=` + maxValue + `></td>
             <td class="todo">` + title + `</td>
             <td class="todo-doing"></td>
             <td class="todo-done"></td>
-            <td class="todo-update"><button class="btn btn-outline-success">Update</button></td>
-            <td class="todo-info"><button class="btn btn-outline-info">Details</button></td>
-            <td class="todo-delete"><button class="btn btn-outline-danger">Delete</button></td>
           </tr>
       `);
 

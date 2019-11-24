@@ -55,8 +55,10 @@ class TodoController extends Controller
 
     $sequance = $request['sequance'];
     $state = $request['state'];
+    $title = $request['title'];
+    $content = $request['content'];
 
-    $todoContent->updateContent($sequance, $state);
+    $todoContent->updateContent($sequance, $state, $title, $content);
 
     return response()->json($request->all());
   }
