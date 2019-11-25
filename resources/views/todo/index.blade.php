@@ -148,10 +148,10 @@ function updateTodo() {
     let updateTitles = [];
     let updateContents = [];
     $(".todo-checkbox").each(function(){
-      if ($(this).prop("checked")) {
+      //if ($(this).prop("checked")) {
         updateChecked.push($(this).val());
         updateTableRow.push($(this).parent().parent());
-      }
+      //}
     });
 
     if (updateChecked.length == 0 ) {
@@ -214,6 +214,7 @@ function deleteTodo() {
     });
 
     if (deleteChecked.length == 0) {
+      alert("削除する場合はチェックを入れてください");
       return;
     }
 
