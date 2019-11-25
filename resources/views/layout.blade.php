@@ -27,8 +27,14 @@
   </head>
   <body>
     <header>
-      <p>Todo</p>
+      <a href="/home">
+        <p>Todo</p>
+      </a>
+      <div class="user-name">
+        {{ Auth::user()->name }}
+      </div>
     </header>
+
     <div class="container">
       @yield('content')
     </div>

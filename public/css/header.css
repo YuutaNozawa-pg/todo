@@ -1,14 +1,25 @@
 
 header {
-	height: 100px;
+	height: 50px;
 	width: 100%;
 	background-color: rgba(50,54,57,1);
 	color: white;
 }
 
 header p {
-	line-height: 100px;
+	line-height: 50px;
 	float: left;
-	font-size: 30px;
+	font-size: 24px;
 	margin-left: 100px;
+}
+
+div.user-name {
+	float: right;
+	margin-top: 15px;
+	margin-right: 100px;
+
+}
+
+a > p{
+	color: white;
 }

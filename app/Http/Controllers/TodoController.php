@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\TodoContent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
+use Log;
 use Validator;
 
 class TodoController extends Controller

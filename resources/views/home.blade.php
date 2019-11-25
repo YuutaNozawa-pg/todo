@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                   <a href="/todo">今日のTodo</a>
                 </div>
             </div>
         </div>

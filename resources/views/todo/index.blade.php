@@ -54,7 +54,7 @@
    <div class="validate-title"></div>
    <div class="validate-content"></div>
 
-   <!-- 2.モーダルの配置 -->
+   <!-- 2.Addモーダルの配置 -->
    <div class="modal fade" id="modal-add-todo" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
@@ -77,7 +77,7 @@
      </div>
    </div>
 
-   <!-- 2.モーダルの配置 -->
+   <!-- 3.Editモーダルの配置 -->
    <div class="modal fade" id="modal-detail-todo" tabindex="-1">
      <div class="modal-dialog">
        <div class="modal-content">
@@ -86,14 +86,14 @@
          </div>
          <div class="modal-body form-group">
              <p>Title</p>
-             <textarea readonly name="update-title" class="title form-control" cols="63"></textarea>
+             <textarea name="update-title" class="edit-title form-control" cols="63"></textarea>
              <br></br>
              <p>Content</p>
-             <textarea readonly name="update-content" class="content form-control" rows="6" cols="63"></textarea>
+             <textarea name="update-content" class="edit-content form-control" rows="6" cols="63"></textarea>
          </div>
 
          <div class="modal-footer">
-             <button class="table-update-save btn btn-outline-dark" data-dismiss="modal">Close</button>
+             <button class="todo-edit-close btn btn-outline-dark" data-dismiss="modal">Close</button>
          </div>
        </div>
      </div>
@@ -131,10 +131,29 @@ window.onload = function() {
 };
 
 function detailTodo() {
+  let myRow;
   $("[data-target]").on("click", function() {
-    $("[name=update-title]").text($(this).data("title"));
-    $("[name=update-content]").text($(this).data("content"));
-    console.log($(this).data("content"));
+    console.log($(this).attr("data-title"));
+    $("[name=update-title]").val($(this).attr("data-title"));
+    $("[name=update-content]").val($(this).attr("data-content"));
+    myRow = $(this);
+  });
+
+  $(".todo-edit-close").on("click", function() {
+    let title = $(".modal-body").find("textarea.edit-title").val();
+    let content = $(".modal-body").find("textarea.edit-content").val();
+
+    let todoRow = $(myRow).siblings();
+    todoRow.push(myRow[0]);
+
+    $(todoRow).each(function() {
+      $(this).attr("data-title", title);
+      $(this).attr("data-content", content);
+
+      if ($(this).text() != "") {
+        $(this).text(title);
+      }
+    });
   });
 }
 
@@ -170,14 +189,17 @@ function updateTodo() {
         var table = $(updateTableRow[i]).children()[j];
         if ($(table).text() != "") {
           updateStates.push(states[j]);
-          let title = $(updateTableRow[i].children()[j]).data("title");
-          let content = $(updateTableRow[i].children()[j]).data("content");
+          let title = $(updateTableRow[i].children()[j]).attr("data-title");
+          let content = $(updateTableRow[i].children()[j]).attr("data-content");
 
           updateTitles.push(title);
           updateContents.push(content);
         }
       }
     }
+
+    console.log(updateTitles);
+    console.log(updateContents);
 
     let updateTodo = {
       "sequance": updateChecked,
