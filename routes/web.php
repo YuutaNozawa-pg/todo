@@ -15,11 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('todo', 'TodoController@index');
+Route::get('todo/{id}', 'TodoController@index', function(){
+
+})->middleware('auth');
 Route::post('todo', 'TodoController@create');
 Route::put('todo', 'TodoController@update');
 Route::delete('todo', 'TodoController@delete');
 
-Auth::routes();
+Route::post('/home', 'HomeController@create');
+Route::delete('/home', 'HomeController@delete');
+Route::put('/home', 'HomeController@update');
+Route::get('/home', 'HomeController@index');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();

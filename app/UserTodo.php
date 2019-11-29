@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class TodoContent extends Model {
+class UserTodo extends Model {
 
   protected $fillable = [
+    'user_id',
+    'group_id',
     'sequance',
     'title',
     'content',
@@ -20,9 +22,11 @@ class TodoContent extends Model {
   }
 
   //ユーザーに紐づかせたデータを1件追加
-  public function addTitleAndContent($sequance, $title, $content) {
-    DB::transaction(function() use ($sequance, $title, $content) {
+  public function addTitleAndContent($userId, $groupId, $sequance, $title, $content) {
+    DB::transaction(function() use ($userId, $groupId, $sequance, $title, $content) {
       $this->create([
+          'user_id' => $userId,
+          'group_id' => $groupId,
           'sequance' => $sequance,
           'title' => $title,
           'content' => $content,
@@ -41,6 +45,15 @@ class TodoContent extends Model {
                'content' => $content[$key]
              ]);
       }
+    });
+  }
+
+  public function deleteGroupContent($userId, $groupId) {
+    DB::transaction(function() use ($userId, $groupId) {
+      $this->where([
+        'user_id' => $userId,
+        'group_id' => $groupId
+      ])->delete();
     });
   }
 

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\TodoContent;
+use App\UserTodo;
+use App\UserGroupTodo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,20 +12,26 @@ use Validator;
 
 class TodoController extends Controller
 {
-  public function index()
+  public function index(Request $request)
   {
+    $todoContent= new UserGroupTodo();
 
-    $todoContent= new TodoContent();
+    $groupId = $request['id'];
 
-    $todoContents = $todoContent->getAllData();
+    if ($todoContent::find($groupId) == null) {
+      return redirect("/home");
+    }
 
-    return view('todo.index', compact('todoContents'));
+    $userTodoContents = $todoContent::find($groupId);
 
+    $todoContents = $todoContent->userTodos;
+
+    return view('todo.index', compact('todoContents', 'groupId'));
   }
 
   public function create(Request $request)
   {
-    $todoContent = new TodoContent();
+    $todoContent = new UserTodo();
 
     $messages = [
       'title.required' => 'please fill in the :attribute',
@@ -40,11 +47,13 @@ class TodoController extends Controller
       return response()->json([ "error" => $validator->errors() ]);
     }
 
+    $userId = Auth::User()->id;
+    $groupId = $request['groupId'];
     $sequance = $request['sequance'];
     $title = $request['title'];
     $content = $request['content'];
 
-    $todoContent->addTitleAndContent($sequance, $title, $content);
+    $todoContent->addTitleAndContent($userId, $groupId, $sequance, $title, $content);
 
     $todoContents = $todoContent->getAllData();
 
@@ -53,7 +62,7 @@ class TodoController extends Controller
 
   public function update(Request $request)
   {
-    $todoContent = new TodoContent();
+    $todoContent = new UserTodo();
 
     $sequance = $request['sequance'];
     $state = $request['state'];
@@ -67,7 +76,7 @@ class TodoController extends Controller
 
   public function delete(Request $request)
   {
-    $todoContent = new TodoContent();
+    $todoContent = new UserTodo();
 
     $todoContent->deleteContent($request['sequance']);
 

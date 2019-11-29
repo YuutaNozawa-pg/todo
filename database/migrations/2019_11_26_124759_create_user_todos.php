@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTodoContents extends Migration
+class CreateUserTodos extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateTodoContents extends Migration
      */
     public function up()
     {
-        Schema::create('todo_contents', function (Blueprint $table) {
+        Schema::create('user_todos', function (Blueprint $table) {
             $table->bigIncrements('id')->nullable(false);
+            $table->bigInteger('user_id')->nullable(false);
+            $table->bigInteger('group_id')->nullable(false);
             $table->bigInteger('sequance')->nullable(false);
             $table->char('title', 128)->nullable(false);
             $table->text('content', 256)->nullable(false);
@@ -30,6 +32,6 @@ class CreateTodoContents extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todo_contents');
+        Schema::dropIfExists('user_todos');
     }
 }
