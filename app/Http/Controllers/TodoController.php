@@ -24,7 +24,7 @@ class TodoController extends Controller
 
     $userTodoContents = $todoContent::find($groupId);
 
-    $todoContents = $todoContent->userTodos;
+    $todoContents = $userTodoContents->userTodos;
 
     return view('todo.index', compact('todoContents', 'groupId'));
   }

@@ -48,8 +48,8 @@
 
   <button style="position: relative; left: 10%; top: 10px;" class="button-todo-update btn btn-outline-dark">Update</button>
   <button style="position: relative; left: 10%; top: 10px;" class="button-todo-delete btn btn-outline-dark">Delete</button>
-  <div class="validate-title"></div>
-  <div class="validate-content"></div>
+  <div style="position: relative; left: 10%; top: 10px;" class="validate-title"></div>
+  <div style="position: relative; left: 10%; top: 10px;" class="validate-content"></div>
 
   <!-- 2.Addモーダルの配置 -->
   <div class="modal fade" id="modal-add-todo" tabindex="-1">
@@ -274,6 +274,8 @@
         "title" : title,
         "content" : content
       };
+
+      console.log("a");
 
       $.ajax({
         url: "/todo",

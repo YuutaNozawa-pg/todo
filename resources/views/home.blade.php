@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">TodoList
+                <div class="card-header">List
                   <button class="add btn btn-outline-dark" style="float: right;">Add</button>
                   <button data-state="edit" class="edit btn btn-outline-dark" style="margin-right: 10px; float: right;">Edit</button>
                 </div>
